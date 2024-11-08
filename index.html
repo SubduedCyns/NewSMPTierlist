@@ -66,6 +66,14 @@
             background-color: #3a3a3a;
         }
 
+        .player-small-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #444;
+        }
+
         .red-border {
             border-left: 3px solid #ff4444;
         }
@@ -126,13 +134,10 @@
         .player-icon-large {
             width: 120px;
             height: 120px;
-            background-color: #444;
             border-radius: 50%;
             margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
+            object-fit: cover;
+            background-color: #444;
         }
 
         .player-name {
@@ -170,76 +175,160 @@
     <div class="modal" id="playerModal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal()">×</span>
-            <div class="player-icon-large">👤</div>
+            <img class="player-icon-large" id="modalPlayerIcon" src="" alt="Player Icon">
             <div class="player-name" id="modalPlayerName"></div>
             <div class="player-tier" id="modalPlayerTier"></div>
         </div>
     </div>
 
-    <div class="tier-container">
-        <div class="tier-column">
-            <div class="tier-header tier-1">
-                TIER 1
-                <span class="trophy">🏆</span>
-            </div>
-            <div class="player-list">
-                <div class="player-card red-border" onclick="showPlayerModal('Marlowww', 'Tier 1')">
-                    <span>Marlowww</span>
-                </div>
-                <div class="player-card red-border" onclick="showPlayerModal('K1rbe', 'Tier 1')">
-                    <span>K1rbe</span>
-                </div>
-                <div class="player-card red-border" onclick="showPlayerModal('Irt', 'Tier 1')">
-                    <span>lrt</span>
-                </div>
-                <div class="player-card red-border" onclick="showPlayerModal('Legertje08', 'Tier 1')">
-                    <span>Legertje08</span>
-                </div>
-                <div class="player-card red-border" onclick="showPlayerModal('Crey6712', 'Tier 1')">
-                    <span>Crey6712</span>
-                </div>
-                <div class="player-card red-border" onclick="showPlayerModal('mystoqn', 'Tier 1')">
-                    <span>mystoqn</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="tier-column">
-            <div class="tier-header tier-2">
-                TIER 2
-                <span class="trophy">🏆</span>
-            </div>
-            <div class="player-list">
-                <div class="player-card green-border" onclick="showPlayerModal('l7wu123', 'Tier 2')">
-                    <span>l7wu123</span>
-                </div>
-                <div class="player-card green-border" onclick="showPlayerModal('vrzc', 'Tier 2')">
-                    <span>vrzc</span>
-                </div>
-                <!-- Add more tier 2 players similarly -->
-            </div>
-        </div>
-
-        <!-- Repeat for other tiers -->
-        
+    <div class="tier-container" id="tierContainer">
+        <!-- Tiers will be populated by JavaScript -->
     </div>
 
     <script>
-        const modal = document.getElementById('playerModal');
-        
-        function showPlayerModal(playerName, tierName) {
-            document.getElementById('modalPlayerName').textContent = playerName;
-            document.getElementById('modalPlayerTier').textContent = tierName;
-            modal.style.display = 'flex';
+        // Player data structure
+        const tiers = {
+            tier1: {
+                name: "TIER 1",
+                players: [
+                    { name: "Marlowww", border: "red" },
+                    { name: "K1rbe", border: "red" },
+                    { name: "lrt", border: "red" },
+                    { name: "Legertje08", border: "red" },
+                    { name: "Crey6712", border: "red" },
+                    { name: "mystoqn", border: "red" }
+                ],
+                hasTrophy: true,
+                color: "tier-1"
+            },
+            tier2: {
+                name: "TIER 2",
+                players: [
+                    { name: "l7wu123", border: "green" },
+                    { name: "vrzc", border: "green" },
+                    { name: "Evantii", border: "red" },
+                    { name: "Org4nic", border: "green" },
+                    { name: "Awerial", border: "green" }
+                ],
+                hasTrophy: true,
+                color: "tier-2"
+            },
+            tier3: {
+                name: "TIER 3",
+                players: [
+                    { name: "zesolution", border: "red" },
+                    { name: "Bezob_Flow", border: "green" },
+                    { name: "Swight", border: "red" },
+                    { name: "Drakelover20", border: "green" },
+                    { name: "AydenAP", border: "red" }
+                ],
+                hasTrophy: true,
+                color: "tier-3"
+            },
+            tier4: {
+                name: "TIER 4",
+                players: [
+                    { name: "5cei", border: "red" },
+                    { name: "smackpack", border: "red" },
+                    { name: "Dead_Seraph1m", border: "red" },
+                    { name: "Out0f0rd3r", border: "red" },
+                    { name: "Svarta_Erik", border: "red" }
+                ],
+                hasTrophy: false,
+                color: "tier-4"
+            },
+            tier5: {
+                name: "TIER 5",
+                players: [
+                    { name: "monkey_bannana", border: "green" },
+                    { name: "UniformRiver369", border: "green" },
+                    { name: "veecube", border: "green" },
+                    { name: "Stiv_Omega29", border: "green" },
+                    { name: "lev_was_taken", border: "green" }
+                ],
+                hasTrophy: false,
+                color: "tier-5"
+            }
+        };
+
+        // Function to get player image path
+        function getPlayerImagePath(playerName) {
+            return `PLAYERS/${playerName}.png`; // Assumes PNG format, adjust as needed
         }
 
-        function closeModal() {
-            modal.style.display = 'none';
+        // Function to check if image exists
+        function imageExists(url) {
+            const img = new Image();
+            img.src = url;
+            return img.complete;
         }
+
+        // Function to show player modal
+        function showPlayerModal(playerName, tierName) {
+            const imagePath = getPlayerImagePath(playerName);
+            const modalIcon = document.getElementById('modalPlayerIcon');
+            modalIcon.src = imagePath;
+            modalIcon.onerror = function() {
+                this.src = 'default-avatar.png'; // Fallback image
+            };
+            
+            document.getElementById('modalPlayerName').textContent = playerName;
+            document.getElementById('modalPlayerTier').textContent = tierName;
+            document.getElementById('playerModal').style.display = 'flex';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+        // Generate tier list HTML
+        function generateTierList() {
+            const container = document.getElementById('tierContainer');
+            
+            for (const [key, tier] of Object.entries(tiers)) {
+                const tierColumn = document.createElement('div');
+                tierColumn.className = 'tier-column';
+                
+                const header = document.createElement('div');
+                header.className = `tier-header ${tier.color}`;
+                header.innerHTML = `${tier.name}${tier.hasTrophy ? '<span class="trophy">🏆</span>' : ''}`;
+                
+                const playerList = document.createElement('div');
+                playerList.className = 'player-list';
+                
+                tier.players.forEach(player => {
+                    const playerCard = document.createElement('div');
+                    playerCard.className = `player-card ${player.border}-border`;
+                    playerCard.onclick = () => showPlayerModal(player.name, tier.name);
+                    
+                    const playerIcon = document.createElement('img');
+                    playerIcon.className = 'player-small-icon';
+                    playerIcon.src = getPlayerImagePath(player.name);
+                    playerIcon.onerror = function() {
+                        this.src = 'default-avatar.png'; // Fallback image
+                    };
+                    
+                    const playerName = document.createElement('span');
+                    playerName.textContent = player.name;
+                    
+                    playerCard.appendChild(playerIcon);
+                    playerCard.appendChild(playerName);
+                    playerList.appendChild(playerCard);
+                });
+                
+                tierColumn.appendChild(header);
+                tierColumn.appendChild(playerList);
+                container.appendChild(tierColumn);
+            }
+        }
+
+        // Initialize
+        generateTierList();
 
         // Close modal when clicking outside
         window.onclick = function(event) {
-            if (event.target == modal) {
+            if (event.target == document.getElementById('playerModal')) {
                 closeModal();
             }
         }
