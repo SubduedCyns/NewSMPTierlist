@@ -1,344 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Rankings</title>
     <style>
         body {
-            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            background: #1a1625;
             font-family: Arial, sans-serif;
-            margin: 20px;
             color: white;
         }
-
-        .tier-container {
+        .header {
             display: flex;
-            gap: 20px;
-            overflow-x: auto;
+            justify-content: space-between;
+            align-items: center;
             padding: 20px;
-            max-width: 100%;
+            background: #1a1625;
         }
-
-        .tier-column {
-            min-width: 220px;
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .tier-header {
-            background-color: #333;
-            padding: 12px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+        .logo {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 20px;
+        }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .search-bar {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 200px;
+        }
+        .nav-buttons {
+            display: flex;
             gap: 10px;
+            margin: 20px;
         }
-
-        .trophy {
-            font-size: 20px;
+        .nav-button {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
         }
-
-        .tier-1 { color: #FFA500; }
-        .tier-2 { color: #C0C0C0; }
-        .tier-3 { color: #FFA500; }
-        .tier-4, .tier-5 { color: #808080; }
-
-        .player-list {
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .content {
+            padding: 20px;
+        }
+        .ranking-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .rank-column {
+            background: rgba(255, 255, 255, 0.05);
             padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            border-radius: 8px;
         }
-
-        .player-card {
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .player-card:hover {
-            background-color: #3a3a3a;
-        }
-
-        .player-small-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-            background-color: #444;
-        }
-
-        .red-border {
-            border-left: 3px solid #ff4444;
-        }
-
-        .green-border {
-            border-left: 3px solid #44ff44;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #2a2a2a;
-            padding: 30px;
-            border-radius: 12px;
-            position: relative;
-            width: 300px;
+        .rank-header {
             text-align: center;
-            animation: modalOpen 0.3s ease-out;
-        }
-
-        @keyframes modalOpen {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #888;
-            transition: color 0.2s;
-        }
-
-        .close-button:hover {
-            color: #fff;
-        }
-
-        .player-icon-large {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            object-fit: cover;
-            background-color: #444;
-        }
-
-        .player-name {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 1.5rem;
             margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            margin: 0 auto 10px;
         }
-
-        .player-tier {
-            font-size: 18px;
-            color: #888;
-        }
-
-        /* Custom scrollbar */
-        .tier-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .tier-container::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        .tier-container::-webkit-scrollbar-thumb {
-            background: #888;
+        .s-rank { background: #ff4444; }
+        .a-rank { background: #ff8c42; }
+        .b-rank { background: #ffd700; }
+        .c-rank { background: #4caf50; }
+        .rank-item {
+            padding: 8px;
+            margin: 4px 0;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
+            cursor: pointer;
         }
-
-        .tier-container::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .rank-item:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <!-- Modal -->
-    <div class="modal" id="playerModal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">×</span>
-            <img class="player-icon-large" id="modalPlayerIcon" src="" alt="Player Icon">
-            <div class="player-name" id="modalPlayerName"></div>
-            <div class="player-tier" id="modalPlayerTier"></div>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-text">new</div>
+            <img src="/api/placeholder/40/40" alt="Logo" style="border-radius: 50%"/>
+            <div class="logo-text">smp</div>
+        </div>
+        <input type="text" class="search-bar" placeholder="search">
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-button" onclick="showFrame('retired')">RETIRED</button>
+        <button class="nav-button" onclick="showFrame('blacklist')">BLACKLIST</button>
+        <button class="nav-button" onclick="showFrame('discord')">DISCORD</button>
+    </div>
+    <div class="content" id="mainContent">
+        <div class="ranking-grid">
+            <div class="rank-column">
+                <div class="rank-header s-rank">S</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 1</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 2</div>
+            </div>
+            <div class="rank-column">
+                <div class="rank-header a-rank">A</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 3</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 4</div>
+            </div>
+            <div class="rank-column">
+                <div class="rank-header b-rank">B</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 5</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 6</div>
+            </div>
+            <div class="rank-column">
+                <div class="rank-header c-rank">C</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 7</div>
+                <div class="rank-item" onclick="showPlayerProfile()">Player 8</div>
+            </div>
         </div>
     </div>
 
-    <div class="tier-container" id="tierContainer">
-        <!-- Tiers will be populated by JavaScript -->
-    </div>
-
     <script>
-        // Player data structure
-        const tiers = {
-            tier1: {
-                name: "TIER 1",
-                players: [
-                    { name: "Marlowww", border: "red" },
-                    { name: "K1rbe", border: "red" },
-                    { name: "lrt", border: "red" },
-                    { name: "Legertje08", border: "red" },
-                    { name: "Crey6712", border: "red" },
-                    { name: "mystoqn", border: "red" }
-                ],
-                hasTrophy: true,
-                color: "tier-1"
-            },
-            tier2: {
-                name: "TIER 2",
-                players: [
-                    { name: "l7wu123", border: "green" },
-                    { name: "vrzc", border: "green" },
-                    { name: "Evantii", border: "red" },
-                    { name: "Org4nic", border: "green" },
-                    { name: "Awerial", border: "green" }
-                ],
-                hasTrophy: true,
-                color: "tier-2"
-            },
-            tier3: {
-                name: "TIER 3",
-                players: [
-                    { name: "zesolution", border: "red" },
-                    { name: "Bezob_Flow", border: "green" },
-                    { name: "Swight", border: "red" },
-                    { name: "Drakelover20", border: "green" },
-                    { name: "AydenAP", border: "red" }
-                ],
-                hasTrophy: true,
-                color: "tier-3"
-            },
-            tier4: {
-                name: "TIER 4",
-                players: [
-                    { name: "5cei", border: "red" },
-                    { name: "smackpack", border: "red" },
-                    { name: "Dead_Seraph1m", border: "red" },
-                    { name: "Out0f0rd3r", border: "red" },
-                    { name: "Svarta_Erik", border: "red" }
-                ],
-                hasTrophy: false,
-                color: "tier-4"
-            },
-            tier5: {
-                name: "TIER 5",
-                players: [
-                    { name: "monkey_bannana", border: "green" },
-                    { name: "UniformRiver369", border: "green" },
-                    { name: "veecube", border: "green" },
-                    { name: "Stiv_Omega29", border: "green" },
-                    { name: "lev_was_taken", border: "green" }
-                ],
-                hasTrophy: false,
-                color: "tier-5"
-            }
-        };
-
-        // Function to get player image path
-        function getPlayerImagePath(playerName) {
-            return `PLAYERS/${playerName}.png`; // Assumes PNG format, adjust as needed
-        }
-
-        // Function to check if image exists
-        function imageExists(url) {
-            const img = new Image();
-            img.src = url;
-            return img.complete;
-        }
-
-        // Function to show player modal
-        function showPlayerModal(playerName, tierName) {
-            const imagePath = getPlayerImagePath(playerName);
-            const modalIcon = document.getElementById('modalPlayerIcon');
-            modalIcon.src = imagePath;
-            modalIcon.onerror = function() {
-                this.src = 'default-avatar.png'; // Fallback image
-            };
-            
-            document.getElementById('modalPlayerName').textContent = playerName;
-            document.getElementById('modalPlayerTier').textContent = tierName;
-            document.getElementById('playerModal').style.display = 'flex';
-        }
-
-        // Function to close modal
-        function closeModal() {
-            document.getElementById('playerModal').style.display = 'none';
-        }
-
-        // Generate tier list HTML
-        function generateTierList() {
-            const container = document.getElementById('tierContainer');
-            
-            for (const [key, tier] of Object.entries(tiers)) {
-                const tierColumn = document.createElement('div');
-                tierColumn.className = 'tier-column';
-                
-                const header = document.createElement('div');
-                header.className = `tier-header ${tier.color}`;
-                header.innerHTML = `${tier.name}${tier.hasTrophy ? '<span class="trophy">🏆</span>' : ''}`;
-                
-                const playerList = document.createElement('div');
-                playerList.className = 'player-list';
-                
-                tier.players.forEach(player => {
-                    const playerCard = document.createElement('div');
-                    playerCard.className = `player-card ${player.border}-border`;
-                    playerCard.onclick = () => showPlayerModal(player.name, tier.name);
-                    
-                    const playerIcon = document.createElement('img');
-                    playerIcon.className = 'player-small-icon';
-                    playerIcon.src = getPlayerImagePath(player.name);
-                    playerIcon.onerror = function() {
-                        this.src = 'default-avatar.png'; // Fallback image
-                    };
-                    
-                    const playerName = document.createElement('span');
-                    playerName.textContent = player.name;
-                    
-                    playerCard.appendChild(playerIcon);
-                    playerCard.appendChild(playerName);
-                    playerList.appendChild(playerCard);
-                });
-                
-                tierColumn.appendChild(header);
-                tierColumn.appendChild(playerList);
-                container.appendChild(tierColumn);
+        function showFrame(page) {
+            const content = document.getElementById('mainContent');
+            switch(page) {
+                case 'retired':
+                    content.innerHTML = `
+                        <h2>Retired Players</h2>
+                        <div class="rank-column">
+                            <div class="rank-item">Retired Player 1</div>
+                            <div class="rank-item">Retired Player 2</div>
+                        </div>
+                    `;
+                    break;
+                case 'blacklist':
+                    content.innerHTML = `
+                        <div style="display: flex; gap: 20px;">
+                            <div class="rank-column" style="flex: 1;">
+                                <h2>Blacklist</h2>
+                                <div class="rank-item">Restricted Player 1</div>
+                                <div class="rank-item">Restricted Player 2</div>
+                            </div>
+                            <div class="rank-column" style="flex: 1;">
+                                <h2>Restricted</h2>
+                                <div class="rank-item">Restricted Player 3</div>
+                                <div class="rank-item">Restricted Player 4</div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'discord':
+                    content.innerHTML = `
+                        <h2>Discord</h2>
+                        <p>Join our Discord community!</p>
+                    `;
+                    break;
             }
         }
 
-        // Initialize
-        generateTierList();
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('playerModal')) {
-                closeModal();
-            }
+        function showPlayerProfile() {
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div style="padding: 20px;">
+                    <img src="/api/placeholder/100/100" alt="Profile Picture" style="border-radius: 50%"/>
+                    <h2>USERNAME</h2>
+                    <p>REGION</p>
+                    <p>TIER</p>
+                </div>
+            `;
         }
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
-            }
-        });
     </script>
 </body>
 </html>
