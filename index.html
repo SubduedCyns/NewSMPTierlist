@@ -23,6 +23,10 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            cursor: pointer;
+        }
+        .logo:hover {
+            opacity: 0.8;
         }
         .logo-text {
             font-size: 2.5rem;
@@ -95,7 +99,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo">
+        <div class="logo" onclick="showHome()">
             <div class="logo-text">new</div>
             <img src="/api/placeholder/40/40" alt="Logo" style="border-radius: 50%"/>
             <div class="logo-text">smp</div>
@@ -133,6 +137,34 @@
     </div>
 
     <script>
+        function showHome() {
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="ranking-grid">
+                    <div class="rank-column">
+                        <div class="rank-header s-rank">S</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 1</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 2</div>
+                    </div>
+                    <div class="rank-column">
+                        <div class="rank-header a-rank">A</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 3</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 4</div>
+                    </div>
+                    <div class="rank-column">
+                        <div class="rank-header b-rank">B</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 5</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 6</div>
+                    </div>
+                    <div class="rank-column">
+                        <div class="rank-header c-rank">C</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 7</div>
+                        <div class="rank-item" onclick="showPlayerProfile()">Player 8</div>
+                    </div>
+                </div>
+            `;
+        }
+
         function showFrame(page) {
             const content = document.getElementById('mainContent');
             switch(page) {
